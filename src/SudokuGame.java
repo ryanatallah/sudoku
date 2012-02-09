@@ -81,40 +81,41 @@ public class SudokuGame {
     int counter = 0;
     int index = 0;
     boolean isSolved = false;
-      for (int i = 0; i < 9; i++){
-          for (int j = 0; j < 9; j++){
-            for (int g = 0; g < 9; g++){
-              if (set[i][j][g] != 0){
-                counter++;
-                index = g;
-              }
+
+    for (int i = 0; i < 9; i++){
+        for (int j = 0; j < 9; j++){
+          for (int g = 0; g < 9; g++){
+            if (set[i][j][g] != 0){
+              counter++;
+              index = g;
             }
-            if (counter == 1){
-              board[i][j] = set[i][j][index];
-              set = makePossArr();
-            }
-            counter = 0;
           }
-      }
-      printBoard(board);
-      System.out.println("Array updated.");
-      while (isSolved == false){
-        isSolved = true;
-        for (int a = 0; a < 9; a++){
-          for (int b = 0; b < 9; b++){
-            if (board[a][b] == 0){
-              isSolved = false;
-              set = solveArr();
-            }
+          if (counter == 1){
+            board[i][j] = set[i][j][index];
+            set = makePossArr();
+          }
+          counter = 0;
+        }
+    }
+
+    while (isSolved == false){
+      isSolved = true;
+      for (int a = 0; a < 9; a++){
+        for (int b = 0; b < 9; b++){
+          if (board[a][b] == 0){
+            isSolved = false;
+            set = solveArr();
           }
         }
       }
-      return set;
+    }
+    return set;
   }
 
   public int[][] getBoard(){
-      return board;
+    return board;
   }
+
   public static void printBoard(int[][] test)
   {
     System.out.println("----------|-----------|----------");
