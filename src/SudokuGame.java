@@ -27,41 +27,30 @@ public class SudokuGame {
 
           // Removes num from possible values of the spaces in column j.
           for (int x = 0; x < 9; x++)
-            set[x][j][num-1] = 0;
+            set[x][j][num - 1] = 0;
 
           // Removes num from possible values of the spaces in row i.
           for (int y = 0; y < 9; y++)
-            set[i][y][num-1] = 0;
+            set[i][y][num - 1] = 0;
 
+          // 2-value array that holds the square position of a space.
           int[] squarePos = new int[2];
 
-          if (i < 3)
-              squarePos[0] = 0;
-          else if (i < 6)
-              squarePos[0] = 3;
-          else
-              squarePos[0] = 6;
-          if (j < 3)
-              squarePos[1] = 0;
-          else if (j < 6)
-              squarePos[1] = 3;
-          else
-              squarePos[1] = 6;
+          // Calculates the square position based on row i and column j.
+          squarePos[0] = (i / 3) * 3;
+          squarePos[1] = (j / 3) * 3;
 
-          for (int w = squarePos[0]; w < squarePos[0] + 3; w++) {
-              for (int z = squarePos[1]; z < squarePos[1] + 3; z++) {
-                for (int l = 0; l < 9; l++) {
-                  if (set[w][z][l] == num)
-                    set[w][z][l] = 0;
-                }
-              }
-          }
+          // Removes num from possible values of other spaces of the squarePos[0][1].
+          for (int w = squarePos[0]; w < squarePos[0] + 3; w++)
+            for (int z = squarePos[1]; z < squarePos[1] + 3; z++)
+              set[w][z][num - 1] = 0;
 
-          for (int e = 1; e < 9; e++) {
+          // Removes all possible values for the filled space.
+          for (int e = 1; e < 9; e++)
             set[i][j][e] = 0;
-          }
 
-          set[i][j][0] = num;
+          // Inserts num as the only possible value for the filled space.
+          set[i][j][num - 1] = num;
         }
       }
     }
