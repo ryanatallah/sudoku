@@ -82,23 +82,9 @@ public class SudokuGame {
    * @return the set of possible values for each space on board.
    */
   public int[][][] solveArr() {
-    int counter = 0;
     boolean isSolved = false;
 
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++) {
-        for (int g = 0; g < 9; g++) {
-          if (set[i][j][g] != 0) {
-            counter++;
-          }
-        }
-        if (counter == 1) {
-          board[i][j] = set[i][j][index];
-          set = makePossArr();
-        }
-        counter = 0;
-      }
-    }
+    updateBoard();
 
     while (isSolved == false) {
       isSolved = true;
@@ -114,6 +100,27 @@ public class SudokuGame {
     return set;
   }
 
+  public void updateBoard() {
+    int counter = 0;
+    int index = 0;
+
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        for (int g = 0; g < 9; g++) {
+          if (set[i][j][g] != 0) {
+            counter++;
+            index = g;
+          }
+        }
+        if (counter == 1) {
+          board[i][j] = set[i][j][index];
+          set = makePossArr();
+        }
+        counter = 0;
+      }
+    }
+  }
+  
 
 
   public int[][] getBoard() {
