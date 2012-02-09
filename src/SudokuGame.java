@@ -25,22 +25,13 @@ public class SudokuGame {
         // Blank spaces on the board are represented by 0.
         if (num > 0) {
 
-          // Removes num from possible values for the space board[i][j].
-          for (int x = 0; x < 9; x++) {
-            for (int c = 0; c < 9; c++) {
-              if (set[x][j][c] == num) {
-                // Possible values are 'removed' through replacement by 0.
-                set[x][j][c] = 0;
-              }
-            }
-          }
+          // Removes num from possible values of the spaces in column j.
+          for (int x = 0; x < 9; x++)
+            set[x][j][num-1] = 0;
 
-          for (int y = 0; y < 9; y++) {
-            for (int d = 0; d < 9; d++) {
-              if (set[i][y][d] == num)
-                set[i][y][d] = 0;
-            }
-          }
+          // Removes num from possible values of the spaces in row i.
+          for (int y = 0; y < 9; y++)
+            set[i][y][num-1] = 0;
 
           int[] squarePos = new int[2];
 
