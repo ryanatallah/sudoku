@@ -5,6 +5,11 @@ public class SudokuGame {
   int[][][] set = new int[9][9][9];
   int[][] board = new int[9][9];
 
+  /**
+   * Defines board and creates the initial possible values array with numbers 1 - 9.
+   *
+   * @param in the starting game board.
+   */
   public SudokuGame(int[][] in) {
     board = in;
 
@@ -14,8 +19,19 @@ public class SudokuGame {
           set[a][b][c-1] = c;
   }
 
-  // takes an board that's already made and generates a list of possible numbers for each space
-  // does not update the board
+
+  /**
+   * Updates the array of possible values for each space on the board by taking each
+   * filled space and removing that space's value from the possible values of each
+   * space in the same row, column, and 3x3 square. The first two dimensions of set
+   * represent the coordinates of the space on the board, and the third dimension
+   * represents the remaining possible values for that space. Values that are no
+   * longer possible for a space are replaced by 0s.
+   *
+   * Does not update board.
+   *
+   * @return the set of possible values for each space on board.
+   */
   public int[][][] makePossArr() {
 
     for (int i = 0; i < 9; i++) {
@@ -57,28 +73,31 @@ public class SudokuGame {
     return set;
   }
 
-  //updates the array of possible values
-  //if there's only one possible value for a space, inserts value into space in board
-  //then makes a new array of possible values given a more complete board
+
+  /**
+   * Updates the array of possible values. If there's only one possible value for a
+   * space, inserts value into space in board. Then makes a new array of possible
+   * values given the updated board.
+   *
+   * @return the set of possible values for each space on board.
+   */
   public int[][][] solveArr() {
     int counter = 0;
-    int index = 0;
     boolean isSolved = false;
 
     for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
-          for (int g = 0; g < 9; g++) {
-            if (set[i][j][g] != 0) {
-              counter++;
-              index = g;
-            }
+      for (int j = 0; j < 9; j++) {
+        for (int g = 0; g < 9; g++) {
+          if (set[i][j][g] != 0) {
+            counter++;
           }
-          if (counter == 1) {
-            board[i][j] = set[i][j][index];
-            set = makePossArr();
-          }
-          counter = 0;
         }
+        if (counter == 1) {
+          board[i][j] = set[i][j][index];
+          set = makePossArr();
+        }
+        counter = 0;
+      }
     }
 
     while (isSolved == false) {
@@ -94,6 +113,8 @@ public class SudokuGame {
     }
     return set;
   }
+
+
 
   public int[][] getBoard() {
     return board;
