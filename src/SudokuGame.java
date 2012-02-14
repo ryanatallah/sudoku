@@ -100,6 +100,8 @@ public class SudokuGame {
     return set;
   }
 
+
+
   public void updateBoard() {
     int counter = 0;
     int index = 0;
@@ -120,7 +122,7 @@ public class SudokuGame {
       }
     }
   }
-  
+
 
 
   public int[][] getBoard() {
