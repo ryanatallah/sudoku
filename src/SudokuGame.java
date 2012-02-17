@@ -4,6 +4,7 @@ public class SudokuGame {
 
   int[][][] set = new int[9][9][9];
   int[][] board = new int[9][9];
+  int step = 0;
 
   /**
    * Defines board and creates the initial possible values array with numbers 1 - 9.
@@ -84,27 +85,36 @@ public class SudokuGame {
   public int[][][] solveArr() {
     boolean isSolved = false;
 
-    updateBoard();
+    int change = updateBoard();
+    if (change > 0) {
+      step++;
+      printBoard(board, "Step " + step);
+      System.out.printf("(%d Changes)\n", change);
 
-    while (isSolved == false) {
-      isSolved = true;
-      for (int a = 0; a < 9; a++) {
-        for (int b = 0; b < 9; b++) {
-          if (board[a][b] == 0) {
-            isSolved = false;
-            set = solveArr();
+      while (isSolved == false) {
+        isSolved = true;
+        for (int a = 0; a < 9; a++) {
+          for (int b = 0; b < 9; b++) {
+            if (board[a][b] == 0) {
+              isSolved = false;
+              set = solveArr();
+            }
           }
         }
       }
+      return set;
+    } else {
+      System.out.println("ERROR: Puzzle could not be solved.");
+      return set;
     }
-    return set;
   }
 
 
 
-  public void updateBoard() {
+  public int updateBoard() {
     int counter = 0;
     int index = 0;
+    int change = 0;
 
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
@@ -114,13 +124,15 @@ public class SudokuGame {
             index = g;
           }
         }
-        if (counter == 1) {
+        if (counter == 1 && board[i][j] == 0) {
+          change++;
           board[i][j] = set[i][j][index];
           set = makePossArr();
         }
         counter = 0;
       }
     }
+    return change;
   }
 
 
@@ -142,8 +154,9 @@ public class SudokuGame {
     return board;
   }
 
-  public static void printBoard(int[][] board)
+  public static void printBoard(int[][] board, String title)
   {
+    System.out.printf("\n\n%s:\n", title);
     System.out.println("----------|-----------|----------");
     for (int j = 0; j < 9; j++) {
       for (int i = 0; i < 8; i++) {
