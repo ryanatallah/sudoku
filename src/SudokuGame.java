@@ -125,6 +125,19 @@ public class SudokuGame {
 
 
 
+  public boolean isSolved(int[][] board) {
+    boolean solved = true;
+
+    for (int i = 0; i < 9; i++)
+      for (int j = 0; j < 9; j++)
+        if (board[i][j] == 0)
+          solved = false;
+
+    return solved;
+  }
+
+
+
   public int[][] getBoard() {
     return board;
   }
