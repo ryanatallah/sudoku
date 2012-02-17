@@ -82,7 +82,7 @@ public class SudokuGame {
    *
    * @return the set of possible values for each space on board.
    */
-  public void solveArr() {
+  public void solvePuzzle() {
     int change = updateBoard();
     if (change > 0) {
       step++;
@@ -92,7 +92,7 @@ public class SudokuGame {
       if (isSolved(board))
         printBoard(board, "SOLVED BOARD");
       else
-        solveArr();
+        solvePuzzle();
     } else {
       System.out.println("\nERROR: Puzzle could not be solved.\n");
     }
