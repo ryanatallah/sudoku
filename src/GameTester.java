@@ -129,7 +129,8 @@ public class GameTester {
       trial.makePossArr();
       trial.solveArr();
       int[][] solvedPuzzle = trial.getBoard();
-      System.out.printf("Board %2d - %s\n", i + 1, trial.isSolved(solvedPuzzle));
+      System.out.printf("\n\nBoard %2d - %s\n\n", i + 1, trial.isSolved(solvedPuzzle));
+      SudokuGame.printBoard(solvedPuzzle);
     }
   }
 }
