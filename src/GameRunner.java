@@ -18,6 +18,6 @@ public class GameRunner {
 
     SudokuGame trial1 = new SudokuGame(test);
     trial1.makePossArr();
-    trial1.solveArr();
+    trial1.solvePuzzle();
   }
 }
