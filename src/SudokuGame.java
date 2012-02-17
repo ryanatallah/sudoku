@@ -82,30 +82,19 @@ public class SudokuGame {
    *
    * @return the set of possible values for each space on board.
    */
-  public int[][][] solveArr() {
-    boolean isSolved = false;
-
+  public void solveArr() {
     int change = updateBoard();
     if (change > 0) {
       step++;
       printBoard(board, "Step " + step);
       System.out.printf("(%d Changes)\n", change);
 
-      while (isSolved == false) {
-        isSolved = true;
-        for (int a = 0; a < 9; a++) {
-          for (int b = 0; b < 9; b++) {
-            if (board[a][b] == 0) {
-              isSolved = false;
-              set = solveArr();
-            }
-          }
-        }
-      }
-      return set;
+      if (isSolved(board))
+        printBoard(board, "SOLVED BOARD");
+      else
+        solveArr();
     } else {
-      System.out.println("ERROR: Puzzle could not be solved.");
-      return set;
+      System.out.println("\nERROR: Puzzle could not be solved.\n");
     }
   }
 
