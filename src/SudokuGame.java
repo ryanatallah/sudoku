@@ -83,14 +83,13 @@ public class SudokuGame {
    * @return the set of possible values for each space on board.
    */
   public void solvePuzzle() {
-    int change = updateBoard();
-    if (change > 0) {
+    int changes = updateBoard();
+    if (changes > 0) {
       step++;
-      printBoard(board, "Step " + step);
-      System.out.printf("(%d Changes)\n", change);
+      printBoard(board, "Step " + step, changes);
 
       if (isSolved(board))
-        printBoard(board, "SOLVED BOARD");
+        printBoard(board, "SOLVED BOARD", 0);
       else
         solvePuzzle();
     } else {
@@ -103,7 +102,7 @@ public class SudokuGame {
   public int updateBoard() {
     int counter = 0;
     int index = 0;
-    int change = 0;
+    int changes = 0;
 
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
@@ -114,14 +113,14 @@ public class SudokuGame {
           }
         }
         if (counter == 1 && board[i][j] == 0) {
-          change++;
+          changes++;
           board[i][j] = set[i][j][index];
           set = makePossArr();
         }
         counter = 0;
       }
     }
-    return change;
+    return changes;
   }
 
 
@@ -143,9 +142,13 @@ public class SudokuGame {
     return board;
   }
 
-  public static void printBoard(int[][] board, String title)
+  public static void printBoard(int[][] board, String title, int changes)
   {
-    System.out.printf("\n\n%s:\n", title);
+    if (changes > 0)
+      System.out.printf("\n\n%s: (%s)\n", title, changeNum(changes));
+    else
+      System.out.printf("\n\n%s:\n", title);
+
     System.out.println("----------|-----------|----------");
     for (int j = 0; j < 9; j++) {
       for (int i = 0; i < 8; i++) {
@@ -157,5 +160,9 @@ public class SudokuGame {
         System.out.println("----------|-----------|----------");
       }
     }
+  }
+
+  public static String changeNum(int changes) {
+    return changes + (changes == 1 ? " change" : " changes");
   }
 }

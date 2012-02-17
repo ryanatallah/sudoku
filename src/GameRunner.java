@@ -14,7 +14,7 @@ public class GameRunner {
       {0,8,2,1,0,0,5,0,0}
     };
 
-    SudokuGame.printBoard(test, "INITIAL BOARD");
+    SudokuGame.printBoard(test, "INITIAL BOARD", 0);
 
     SudokuGame trial1 = new SudokuGame(test);
     trial1.makePossArr();
