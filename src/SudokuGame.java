@@ -185,7 +185,6 @@ public class SudokuGame {
   }
 
 
-
   public boolean isSolved() {
     boolean solved = true;
 
@@ -213,12 +212,17 @@ public class SudokuGame {
     return board;
   }
 
+
   public static void printBoard(int[][] board, String title, int changes)
   {
-    if (changes > 0)
-      System.out.printf("\n\n%s: (%s)\n", title, changeNum(changes));
+    if (changes == 1)
+      System.out.printf("\n\n%s: (%d %s)\n", title, changes, "change");
+    else if (changes > 1)
+      System.out.printf("\n\n%s: (%d %s)\n", title, changes, "changes");
     else
       System.out.printf("\n\n%s:\n", title);
+
+    checkFailure(board);
 
     System.out.println("----------|-----------|----------");
     for (int j = 0; j < 9; j++) {
@@ -233,7 +237,41 @@ public class SudokuGame {
     }
   }
 
-  public static String changeNum(int changes) {
-    return changes + (changes == 1 ? " change" : " changes");
+
+  public static void checkFailure(int[][] board) {
+    int failures = 0;
+
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        int num = board[i][j];
+
+        if (num > 0) {
+          // Removes num from possible values of the spaces in column j.
+          for (int x = 0; x < 9; x++)
+            if (num == board[x][j] && x != i)
+              failures++;
+          
+          // Removes num from possible values of the spaces in row i.
+          for (int y = 0; y < 9; y++)
+            if (num == board[i][y] && y != j)
+              failures++;
+          
+          // 2-value array that holds the square position of a space.
+          int[] squarePos = new int[2];
+          
+          // Calculates the square position based on row i and column j.
+          squarePos[0] = (i / 3) * 3;
+          squarePos[1] = (j / 3) * 3;
+          
+          // Removes num from possible values of other spaces of the squarePos[0][1].
+          for (int w = squarePos[0]; w < squarePos[0] + 3; w++)
+            for (int z = squarePos[1]; z < squarePos[1] + 3; z++)
+              if (num == board[w][z] && w != i && z != j)
+                failures++;
+        }
+      }
+    }
+    if (failures > 0)
+      System.out.println("FAILURES: " + failures);
   }
 }
