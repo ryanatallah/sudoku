@@ -95,6 +95,9 @@ public class SudokuGame {
     int changes = updateBoard();
     step++;
 
+    if (checkFailure(board) > 0 && branchCounter > 0)
+      revertBranch();
+
     if (changes > 0) {
       printBoard(board, "Step " + step, changes);
 
@@ -127,7 +130,11 @@ public class SudokuGame {
       for (int j = 0; j < 9; j++) {
         if (numPossValues(i,j) == 2) {
           branchCounter++;
-          branches[branchCounter - 1] = board;
+
+          for (int x = 0; x < 9; x++)
+            for (int y = 0; y < 9; y++)
+              branches[branchCounter - 1][x][y] = board[x][y];
+
           System.out.printf("\n\nBRANCH CREATED AT [%d][%d]\n", i, j);
           splitBranches(branchCounter, i, j);
           return true;
@@ -145,13 +152,13 @@ public class SudokuGame {
     for (int g = 0; g < 9; g++) {
       int val = g + 1;
       if (set[i][j][g] != 0 && set[i][j][g] != board[i][j]) {
-        if (numPicked) {
-          System.out.println("Possible option 2: " + val);
-          branches[branchCounter - 1][i][j] = val;
-        } else {
+        if (numPicked != true) {
           System.out.println("Possible option 1: " + val);
           board[i][j] = val;
           numPicked = true;
+        } else {
+          System.out.println("Possible option 2: " + val);
+          branches[branchCounter - 1][i][j] = val;
         }
       }
     }
@@ -228,7 +235,9 @@ public class SudokuGame {
     else
       System.out.printf("\n\n%s:\n", title);
 
-    checkFailure(board);
+    int failures = checkFailure(board);
+    if (failures > 0)
+      System.out.println("FAILURES: " + failures);
 
     System.out.println("|-----------|-----------|-----------|");
     for (int j = 0; j < 9; j++) {
@@ -249,7 +258,7 @@ public class SudokuGame {
   }
 
 
-  public void checkFailure(int[][] board) {
+  public int checkFailure(int[][] board) {
     int failures = 0;
 
     for (int i = 0; i < 9; i++) {
@@ -284,7 +293,6 @@ public class SudokuGame {
         }
       }
     }
-    if (failures > 0)
-      System.out.println("FAILURES: " + failures);
+    return failures;
   }
 }
