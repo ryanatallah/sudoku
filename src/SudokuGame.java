@@ -3,7 +3,9 @@ import java.util.*;
 public class SudokuGame {
 
   int[][][] set = new int[9][9][9];
+  int[][][] branches = new int[74][9][9];
   int[][] board = new int[9][9];
+  int branchCounter = 0;
   int step = 0;
 
   /**
@@ -84,19 +86,78 @@ public class SudokuGame {
    */
   public void solvePuzzle() {
     int changes = updateBoard();
+    step++;
+
     if (changes > 0) {
-      step++;
       printBoard(board, "Step " + step, changes);
 
-      if (isSolved(board))
-        printBoard(board, "SOLVED BOARD", 0);
+      if (isSolved())
+        printBoard(board, "PUZZLE SOLVED", 0);
       else
         solvePuzzle();
     } else {
-      System.out.println("\nERROR: Puzzle could not be solved.\n");
+      if (createBranch()) {
+        printBoard(board, "No solutions; branch " + branchCounter + " created", 0);
+        set = makePossArr();
+        solvePuzzle();
+      } else {
+        if (branchCounter > 0) {
+          revertBranch();
+          set = makePossArr();
+          solvePuzzle();
+        } else {
+          System.out.println("\nERROR: Puzzle could not be solved.\n");
+        }
+      }
     }
   }
 
+
+  public boolean createBranch() {
+    int counter = 0;
+
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        if (numPossValues(i,j) == 2) {
+          branchCounter++;
+          branches[branchCounter] = board;
+          System.out.printf("\n\nBRANCH CREATED AT [%d][%d]\n", i, j);
+          splitBranches(branchCounter, i, j);
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+
+  public void splitBranches(int branchCounter, int i, int j) {
+    boolean numPicked = false;
+
+  search:
+    for (int g = 0; g < 9; g++) {
+      int val = g + 1;
+      if (set[i][j][g] != 0 && set[i][j][g] != board[i][j]) {
+        if (numPicked) {
+          System.out.println("Possible option 2: " + val);
+          branches[branchCounter][i][j] = val;
+          break search;
+        } else {
+          System.out.println("Possible option 1: " + val);
+          board[i][j] = g;
+          numPicked = true;
+        }
+      }
+    }
+  }
+
+
+  public void revertBranch() {
+    board = branches[branchCounter];
+    printBoard(board, "Board reverted to branch " + branchCounter, 0);
+    branchCounter--;
+  }
 
 
   public int updateBoard() {
@@ -107,7 +168,7 @@ public class SudokuGame {
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         for (int g = 0; g < 9; g++) {
-          if (set[i][j][g] != 0) {
+          if (set[i][j][g] != 0 && set[i][j][g] != board[i][j]) {
             counter++;
             index = g;
           }
@@ -125,7 +186,7 @@ public class SudokuGame {
 
 
 
-  public boolean isSolved(int[][] board) {
+  public boolean isSolved() {
     boolean solved = true;
 
     for (int i = 0; i < 9; i++)
@@ -136,6 +197,16 @@ public class SudokuGame {
     return solved;
   }
 
+
+  public int numPossValues(int i, int j) {
+    int counter = 0;
+
+    for (int g = 0; g < 9; g++)
+      if (set[i][j][g] != 0 && set[i][j][g] != board[i][j])
+        counter++;
+
+    return counter;
+  }
 
 
   public int[][] getBoard() {
