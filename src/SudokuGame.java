@@ -1,5 +1,4 @@
 import java.util.*;
-
 public class SudokuGame {
 
   int[][][] set = new int[9][9][9];
@@ -33,17 +32,17 @@ public class SudokuGame {
 
 
   /**
-   * Updates the array of possible values for each space on the board by taking each
-   * filled space and removing that space's value from the possible values of each
-   * space in the same row, column, and 3x3 square. The first two dimensions of set
-   * represent the coordinates of the space on the board, and the third dimension
-   * represents the remaining possible values for that space. Values that are no
-   * longer possible for a space are replaced by 0s.
-   *
-   * Does not update board.
-   *
-   * @return the set of possible values for each space on board.
-   */
+* Updates the array of possible values for each space on the board by taking each
+* filled space and removing that space's value from the possible values of each
+* space in the same row, column, and 3x3 square. The first two dimensions of set
+* represent the coordinates of the space on the board, and the third dimension
+* represents the remaining possible values for that space. Values that are no
+* longer possible for a space are replaced by 0s.
+*
+* Does not update board.
+*
+* @return the set of possible values for each space on board.
+*/
   public int[][][] makePossArr() {
 
     for (int i = 0; i < 9; i++) {
@@ -74,11 +73,19 @@ public class SudokuGame {
               set[w][z][num - 1] = 0;
 
           // Removes all possible values for the filled space.
-          for (int e = 1; e < 9; e++)
+          for (int e = 0; e < 9; e++)
             set[i][j][e] = 0;
 
           // Inserts num as the only possible value for the filled space.
           set[i][j][num - 1] = num;
+        }
+        
+        int possNum=checkIfOnly(i, j);
+        if (possNum>0){
+          for (int e=0; e<9; e++){
+        	set[i][j][e]=0;
+          }
+          set[i][j][possNum-1]=possNum;
         }
       }
     }
@@ -107,17 +114,21 @@ public class SudokuGame {
         printBoard(board, "PUZZLE SOLVED", 0);
       else
         solvePuzzle();
-    } else {
+    } 
+    
+    else {
       if (createBranch()) {
         printBoard(board, "No solutions; branch " + branchCounter + " created", 0);
         set = makePossArr();
         solvePuzzle();
-      } else {
+      } 
+      else {
         if (branchCounter > 0) {
           revertBranch();
           makePossArr();
           solvePuzzle();
-        } else {
+        } 
+        else {
           if (print)
             System.out.println("\nERROR: Puzzle could not be solved.\n");
         }
@@ -127,16 +138,17 @@ public class SudokuGame {
 
 
   public boolean createBranch() {
-    int counter = 0;
 
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         if (numPossValues(i,j) == 2) {
           branchCounter++;
 
-          for (int x = 0; x < 9; x++)
-            for (int y = 0; y < 9; y++)
+          for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
               branches[branchCounter - 1][x][y] = board[x][y];
+            }
+          }
 
           if (print)
             System.out.printf("\n\nBRANCH CREATED AT [%d][%d]\n", i, j);
@@ -161,7 +173,8 @@ public class SudokuGame {
             System.out.println("Possible option 1: " + val);
           board[i][j] = val;
           numPicked = true;
-        } else {
+        } 
+        else {
           if (print)
             System.out.println("Possible option 2: " + val);
           branches[branchCounter - 1][i][j] = val;
@@ -271,35 +284,88 @@ public class SudokuGame {
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         boolean possValues = false;
-        for (int g = 0; g < 9; g++)
+        for (int g = 0; g < 9; g++){
           if (set[i][j][g] > 0)
             possValues = true;
+        }
         if (possValues != true)
           failures++;
 
         int num = board[i][j];
 
         if (num > 0) {
-          for (int x = 0; x < 9; x++)
+          for (int x = 0; x < 9; x++){
             if (num == board[x][j] && x != i)
               failures++;
+          }
 
-          for (int y = 0; y < 9; y++)
+          for (int y = 0; y < 9; y++){
             if (num == board[i][y] && y != j)
               failures++;
+          }
 
           int[] squarePos = new int[2];
 
           squarePos[0] = (i / 3) * 3;
           squarePos[1] = (j / 3) * 3;
 
-          for (int w = squarePos[0]; w < squarePos[0] + 3; w++)
-            for (int z = squarePos[1]; z < squarePos[1] + 3; z++)
+          for (int w = squarePos[0]; w < squarePos[0] + 3; w++) {
+            for (int z = squarePos[1]; z < squarePos[1] + 3; z++) {
               if (num == board[w][z] && w != i && z != j)
                 failures++;
+            }
+          }
         }
       }
     }
     return failures;
+  }
+  
+  /**
+   * Checks to see if the square at board[x][y] is the only square that can
+   * be a particular value
+   * @returns the value that is unique to that square
+   */
+  public int checkIfOnly(int x, int y){
+	int possNum=0;
+	ArrayList<Integer> index=new ArrayList<Integer>();
+	boolean isOnly=true;
+	for (int i=0; i<9; i++){
+      if (set[x][y][i] != 0){
+    	index.add(set[x][y][i]);
+      }
+	}
+      
+    for (int c=index.size()-1; c>=0; c--){
+      int[] squarePos = new int[2];
+
+      squarePos[0] = (x / 3) * 3;
+      squarePos[1] = (y / 3) * 3;
+        
+      for (int w = squarePos[0]; w < squarePos[0] + 3; w++) {
+        for (int z = squarePos[1]; z < squarePos[1] + 3; z++) {
+          for (int k=0; k<9; k++){
+            if (set[w][z][k] == index.get(c) && w != x && z != y)
+              isOnly=false;
+          }
+        }
+      }
+        
+      for (int a=0; a<9; a++) {
+    	for (int b=0; b<9; b++) {
+          if (set[x][a][b] == index.get(c) && a != y)
+            isOnly=false;
+          if (set[a][y][b] == index.get(c) && a != x)
+        	isOnly=false;
+    	}
+      }
+      if (isOnly){
+    	possNum=index.get(c);
+      }
+      else
+    	index.remove(c);
+    }
+    
+	return possNum;
   }
 }
