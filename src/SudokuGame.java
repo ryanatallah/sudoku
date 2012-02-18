@@ -16,10 +16,17 @@ public class SudokuGame {
   public SudokuGame(int[][] in) {
     board = in;
 
+    resetPossValues();
+  }
+
+
+  public void resetPossValues() {
     for (int a = 0; a < 9; a++)
       for (int b = 0; b < 9; b++)
         for (int c = 1; c < 10; c++)
           set[a][b][c-1] = c;
+
+    makePossArr();
   }
 
 
@@ -103,7 +110,7 @@ public class SudokuGame {
       } else {
         if (branchCounter > 0) {
           revertBranch();
-          set = makePossArr();
+          makePossArr();
           solvePuzzle();
         } else {
           System.out.println("\nERROR: Puzzle could not be solved.\n");
@@ -120,7 +127,7 @@ public class SudokuGame {
       for (int j = 0; j < 9; j++) {
         if (numPossValues(i,j) == 2) {
           branchCounter++;
-          branches[branchCounter] = board;
+          branches[branchCounter - 1] = board;
           System.out.printf("\n\nBRANCH CREATED AT [%d][%d]\n", i, j);
           splitBranches(branchCounter, i, j);
           return true;
@@ -135,17 +142,15 @@ public class SudokuGame {
   public void splitBranches(int branchCounter, int i, int j) {
     boolean numPicked = false;
 
-  search:
     for (int g = 0; g < 9; g++) {
       int val = g + 1;
       if (set[i][j][g] != 0 && set[i][j][g] != board[i][j]) {
         if (numPicked) {
           System.out.println("Possible option 2: " + val);
-          branches[branchCounter][i][j] = val;
-          break search;
+          branches[branchCounter - 1][i][j] = val;
         } else {
           System.out.println("Possible option 1: " + val);
-          board[i][j] = g;
+          board[i][j] = val;
           numPicked = true;
         }
       }
@@ -154,7 +159,8 @@ public class SudokuGame {
 
 
   public void revertBranch() {
-    board = branches[branchCounter];
+    board = branches[branchCounter - 1];
+    resetPossValues();
     printBoard(board, "Board reverted to branch " + branchCounter, 0);
     branchCounter--;
   }
@@ -176,7 +182,7 @@ public class SudokuGame {
         if (counter == 1 && board[i][j] == 0) {
           changes++;
           board[i][j] = set[i][j][index];
-          set = makePossArr();
+          makePossArr();
         }
         counter = 0;
       }
@@ -213,7 +219,7 @@ public class SudokuGame {
   }
 
 
-  public static void printBoard(int[][] board, String title, int changes)
+  public void printBoard(int[][] board, String title, int changes)
   {
     if (changes == 1)
       System.out.printf("\n\n%s: (%d %s)\n", title, changes, "change");
@@ -238,32 +244,34 @@ public class SudokuGame {
   }
 
 
-  public static void checkFailure(int[][] board) {
+  public void checkFailure(int[][] board) {
     int failures = 0;
 
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
+        boolean possValues = false;
+        for (int g = 0; g < 9; g++)
+          if (set[i][j][g] > 0)
+            possValues = true;
+        if (possValues != true)
+          failures++;
+
         int num = board[i][j];
 
         if (num > 0) {
-          // Removes num from possible values of the spaces in column j.
           for (int x = 0; x < 9; x++)
             if (num == board[x][j] && x != i)
               failures++;
-          
-          // Removes num from possible values of the spaces in row i.
+
           for (int y = 0; y < 9; y++)
             if (num == board[i][y] && y != j)
               failures++;
-          
-          // 2-value array that holds the square position of a space.
+
           int[] squarePos = new int[2];
-          
-          // Calculates the square position based on row i and column j.
+
           squarePos[0] = (i / 3) * 3;
           squarePos[1] = (j / 3) * 3;
-          
-          // Removes num from possible values of other spaces of the squarePos[0][1].
+
           for (int w = squarePos[0]; w < squarePos[0] + 3; w++)
             for (int z = squarePos[1]; z < squarePos[1] + 3; z++)
               if (num == board[w][z] && w != i && z != j)
