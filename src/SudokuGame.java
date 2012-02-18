@@ -230,16 +230,21 @@ public class SudokuGame {
 
     checkFailure(board);
 
-    System.out.println("----------|-----------|----------");
+    System.out.println("|-----------|-----------|-----------|");
     for (int j = 0; j < 9; j++) {
-      for (int i = 0; i < 8; i++) {
-        System.out.print(board[i][j] + " | ");
+      for (int i = 0; i < 9; i++) {
+        if (i == 0)
+          System.out.print("|");
+        if (board[i][j] == 0)
+          System.out.printf("   ");
+        else
+          System.out.printf(" %d ", board[i][j]);
+        System.out.print("|");
+        if (i == 8)
+          System.out.println("");
       }
-      System.out.println(board[8][j]);
       if (j % 3 == 2)
-      {
-        System.out.println("----------|-----------|----------");
-      }
+        System.out.println("|-----------|-----------|-----------|");
     }
   }
 
