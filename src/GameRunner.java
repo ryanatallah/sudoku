@@ -14,7 +14,8 @@ public class GameRunner {
       {4,7,0,0,0,1,0,0,0}
     };
 
-    SudokuGame trial1 = new SudokuGame(test);
+    boolean print = true;
+    SudokuGame trial1 = new SudokuGame(test, print);
     trial1.printBoard(test, "STARTING PUZZLE", 0);
     trial1.solvePuzzle();
   }

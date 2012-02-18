@@ -150,12 +150,11 @@ public class GameTester {
     };
 
     for (int i = 0; i < testBoards.length; i++) {
-      SudokuGame trial = new SudokuGame(testBoards[i]);
-      trial.makePossArr();
-      trial.solveArr();
-      int[][] solvedPuzzle = trial.getBoard();
-      System.out.printf("\n\nBoard %2d - %s\n\n", i + 1, trial.isSolved(solvedPuzzle));
-      SudokuGame.printBoard(solvedPuzzle);
+      boolean print = false;
+      SudokuGame trial = new SudokuGame(testBoards[i], print);
+      trial.printBoard(testBoards[i], "STARTING PUZZLE", 0);
+      trial.solvePuzzle();
+      System.out.printf("Board %2d - %s\n", i + 1, trial.isSolved());
     }
   }
 }

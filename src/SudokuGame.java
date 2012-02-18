@@ -7,14 +7,16 @@ public class SudokuGame {
   int[][] board = new int[9][9];
   int branchCounter = 0;
   int step = 0;
+  boolean print = true;
 
   /**
    * Defines board and creates the initial possible values array with numbers 1 - 9.
    *
    * @param in the starting game board.
    */
-  public SudokuGame(int[][] in) {
+  public SudokuGame(int[][] in, boolean printInstr) {
     board = in;
+    print = printInstr;
 
     resetPossValues();
   }
@@ -116,7 +118,8 @@ public class SudokuGame {
           makePossArr();
           solvePuzzle();
         } else {
-          System.out.println("\nERROR: Puzzle could not be solved.\n");
+          if (print)
+            System.out.println("\nERROR: Puzzle could not be solved.\n");
         }
       }
     }
@@ -135,7 +138,8 @@ public class SudokuGame {
             for (int y = 0; y < 9; y++)
               branches[branchCounter - 1][x][y] = board[x][y];
 
-          System.out.printf("\n\nBRANCH CREATED AT [%d][%d]\n", i, j);
+          if (print)
+            System.out.printf("\n\nBRANCH CREATED AT [%d][%d]\n", i, j);
           splitBranches(branchCounter, i, j);
           return true;
         }
@@ -153,11 +157,13 @@ public class SudokuGame {
       int val = g + 1;
       if (set[i][j][g] != 0 && set[i][j][g] != board[i][j]) {
         if (numPicked != true) {
-          System.out.println("Possible option 1: " + val);
+          if (print)
+            System.out.println("Possible option 1: " + val);
           board[i][j] = val;
           numPicked = true;
         } else {
-          System.out.println("Possible option 2: " + val);
+          if (print)
+            System.out.println("Possible option 2: " + val);
           branches[branchCounter - 1][i][j] = val;
         }
       }
@@ -226,34 +232,35 @@ public class SudokuGame {
   }
 
 
-  public void printBoard(int[][] board, String title, int changes)
-  {
-    if (changes == 1)
-      System.out.printf("\n\n%s: (%d %s)\n", title, changes, "change");
-    else if (changes > 1)
-      System.out.printf("\n\n%s: (%d %s)\n", title, changes, "changes");
-    else
-      System.out.printf("\n\n%s:\n", title);
+  public void printBoard(int[][] board, String title, int changes) {
+    if (print) {
+      if (changes == 1)
+        System.out.printf("\n\n%s: (%d %s)\n", title, changes, "change");
+      else if (changes > 1)
+        System.out.printf("\n\n%s: (%d %s)\n", title, changes, "changes");
+      else
+        System.out.printf("\n\n%s:\n", title);
 
-    int failures = checkFailure(board);
-    if (failures > 0)
-      System.out.println("FAILURES: " + failures);
+      int failures = checkFailure(board);
+      if (failures > 0)
+        System.out.println("FAILURES: " + failures);
 
-    System.out.println("|-----------|-----------|-----------|");
-    for (int j = 0; j < 9; j++) {
-      for (int i = 0; i < 9; i++) {
-        if (i == 0)
+      System.out.println("|-----------|-----------|-----------|");
+      for (int j = 0; j < 9; j++) {
+        for (int i = 0; i < 9; i++) {
+          if (i == 0)
+            System.out.print("|");
+          if (board[i][j] == 0)
+            System.out.printf("   ");
+          else
+            System.out.printf(" %d ", board[i][j]);
           System.out.print("|");
-        if (board[i][j] == 0)
-          System.out.printf("   ");
-        else
-          System.out.printf(" %d ", board[i][j]);
-        System.out.print("|");
-        if (i == 8)
-          System.out.println("");
+          if (i == 8)
+            System.out.println("");
+        }
+        if (j % 3 == 2)
+          System.out.println("|-----------|-----------|-----------|");
       }
-      if (j % 3 == 2)
-        System.out.println("|-----------|-----------|-----------|");
     }
   }
 
