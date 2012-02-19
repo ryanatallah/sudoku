@@ -3,6 +3,6 @@ public class BoardMaker {
   public static void main(String[] args){
 	CompleteBoard hope=new CompleteBoard();
 	int[][] fire=hope.makeBoard();
-	CompleteBoard.printBoard(fire, "EVIL", 0);
+	hope.printBoard(fire, "EVIL", 0);
   }
 }

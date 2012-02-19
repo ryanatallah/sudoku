@@ -87,6 +87,7 @@ public class SudokuGame {
           }
           set[i][j][possNum-1]=possNum;
         }
+        
       }
     }
     return set;
