@@ -359,9 +359,8 @@ public class SudokuGame {
         	isOnly=false;
     	}
       }
-      if (isOnly){
+      if (isOnly)
     	possNum=index.get(c);
-      }
     }
     
 	return possNum;
@@ -371,22 +370,70 @@ public class SudokuGame {
 	ArrayList<int[]> nums = new ArrayList<int[]>();
 	int counter=0;
 	ArrayList<Integer> index=new ArrayList<Integer>();
-	for (int n=0; n<9; n++){
+	for (int n=2; n<9; n++){
+		
 	  for (int i=0; i<9; i++){
 		for (int j=1; j<9; j++){
-	      int[] values=new int[n+1];
+			
+	      int[] values=new int[n];
+	      
 	      for (int g=0; g<9; g++){
-	    	if (set[i][j][g] != 0){
-	    	  counter++;
-	    	  index.add(g);
+	    	for (int c=0; c<9; c++){
+	    	  if (set[i][g][c] != 0){
+	  	    	counter++;
+	  	    	index.add(c);
+	  	      }
 	    	}
 	      }
 	      if (counter==n){
-	    	for (int a=0; a<=n; a++){
-	    	  values[a]=index.get(a);
-	    	}
-	    	nums.add(values);
-	      }
+		    for (int a=0; a<n; a++){
+		      values[a]=index.get(a);
+		    }
+		    nums.add(values);
+		  }
+	      
+	      counter=0;
+	      
+	      for (int g=0; g<9; g++){
+		    for (int c=0; c<9; c++){
+		      if (set[g][j][c] != 0){
+		  	    counter++;
+		  	    index.add(c);
+		  	  }
+		    }
+		    if (counter==n){
+		      for (int a=0; a<n; a++){
+		    	values[a]=index.get(a);
+		      }
+		      nums.add(values);
+		    }
+		  }
+	      
+	      
+	      counter=0;
+	      
+	      int[] squarePos=new int[2];
+	      squarePos[0] = (i / 3) * 3;
+          squarePos[1] = (j / 3) * 3;
+
+          for (int w = squarePos[0]; w < squarePos[0] + 3; w++){
+            for (int z = squarePos[1]; z < squarePos[1] + 3; z++){
+              for (int c=0; c<9; c++){
+                if (set[w][z][c] != 0){
+                  counter++;
+                  index.add(c);
+                }
+              }
+            }
+          }
+          if (counter==n){
+  	    	for (int a=0; a<n; a++){
+  	    	  values[a]=index.get(a);
+  	    	}
+  	    	nums.add(values);
+  	      }
+          
+          counter=0;
 		}
 	  }
 	}
