@@ -30,6 +30,7 @@ public class CompleteBoard extends SudokuGame {
   	  for (int c=0; c<9; c++){
   		if (set[i][j][c] != 0){
   		  board[i][j]=set[i][j][c];
+  		  num=c;
   		}
   	  }
   	}

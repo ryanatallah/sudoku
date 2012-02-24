@@ -87,7 +87,6 @@ public class SudokuGame {
           }
           set[i][j][possNum-1]=possNum;
         }
-        
       }
     }
     return set;
@@ -363,10 +362,33 @@ public class SudokuGame {
       if (isOnly){
     	possNum=index.get(c);
       }
-      else
-    	index.remove(c);
     }
     
 	return possNum;
+  }
+  
+  public void checkSets(){
+	ArrayList<int[]> nums = new ArrayList<int[]>();
+	int counter=0;
+	ArrayList<Integer> index=new ArrayList<Integer>();
+	for (int n=0; n<9; n++){
+	  for (int i=0; i<9; i++){
+		for (int j=1; j<9; j++){
+	      int[] values=new int[n+1];
+	      for (int g=0; g<9; g++){
+	    	if (set[i][j][g] != 0){
+	    	  counter++;
+	    	  index.add(g);
+	    	}
+	      }
+	      if (counter==n){
+	    	for (int a=0; a<=n; a++){
+	    	  values[a]=index.get(a);
+	    	}
+	    	nums.add(values);
+	      }
+		}
+	  }
+	}
   }
 }
