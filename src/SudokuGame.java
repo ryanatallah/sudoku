@@ -370,6 +370,7 @@ public class SudokuGame {
 	ArrayList<int[]> nums = new ArrayList<int[]>();
 	int counter=0;
 	ArrayList<Integer> index=new ArrayList<Integer>();
+	int counter2=0;
 	for (int n=2; n<9; n++){
 		
 	  for (int i=0; i<9; i++){
@@ -378,19 +379,35 @@ public class SudokuGame {
 	      int[] values=new int[n];
 	      
 	      for (int g=0; g<9; g++){
-	    	for (int c=0; c<9; c++){
-	    	  if (set[i][g][c] != 0){
-	  	    	counter++;
-	  	    	index.add(c);
-	  	      }
-	    	}
-	      }
-	      if (counter==n){
-		    for (int a=0; a<n; a++){
-		      values[a]=index.get(a);
-		    }
-		    nums.add(values);
-		  }
+			    for (int c=0; c<9; c++){
+			      if (set[i][g][c] != 0){
+			  	    counter++;
+			  	    index.add(c+1);
+			  	  }
+			    }
+			    if (counter==n){
+			      for (int a=0; a<n; a++){
+			    	values[a]=index.get(a);
+			      }
+			      nums.add(values);
+			    }
+			  }
+		      for (int a=0; a<nums.size()-1; a++){
+		    	for (int b=a+1; b<nums.size(); b++){
+		    	  if (nums.get(a)==nums.get(b)){
+		    		counter2++;
+		    	  }
+		    	}
+		    	if (counter2==n){
+		    	  int[] hope=nums.get(a);
+		    	  for (int x=0; x<hope.length; x++){
+		    	    for (int y=0; y<9; y++){
+		    	      set[i][y][hope[x]]=0;
+		    	    }
+		    	  }
+		    	}
+		    	counter2=0;
+		      }
 	      
 	      counter=0;
 	      
@@ -398,7 +415,7 @@ public class SudokuGame {
 		    for (int c=0; c<9; c++){
 		      if (set[g][j][c] != 0){
 		  	    counter++;
-		  	    index.add(c);
+		  	    index.add(c+1);
 		  	  }
 		    }
 		    if (counter==n){
@@ -408,7 +425,22 @@ public class SudokuGame {
 		      nums.add(values);
 		    }
 		  }
-	      
+	      for (int a=0; a<nums.size()-1; a++){
+	    	for (int b=a+1; b<nums.size(); b++){
+	    	  if (nums.get(a)==nums.get(b)){
+	    		counter2++;
+	    	  }
+	    	}
+	    	if (counter2==n){
+	    	  int[] hope=nums.get(a);
+	    	  for (int x=0; x<hope.length; x++){
+	    	    for (int y=0; y<9; y++){
+	    	      set[y][j][hope[x]]=0;
+	    	    }
+	    	  }
+	    	}
+	    	counter2=0;
+	      }
 	      
 	      counter=0;
 	      
@@ -418,24 +450,45 @@ public class SudokuGame {
 
           for (int w = squarePos[0]; w < squarePos[0] + 3; w++){
             for (int z = squarePos[1]; z < squarePos[1] + 3; z++){
-              for (int c=0; c<9; c++){
-                if (set[w][z][c] != 0){
-                  counter++;
-                  index.add(c);
-                }
-              }
-            }
-          }
-          if (counter==n){
-  	    	for (int a=0; a<n; a++){
-  	    	  values[a]=index.get(a);
-  	    	}
-  	    	nums.add(values);
-  	      }
+            	for (int c=0; c<9; c++){
+      		      if (set[w][z][c] != 0){
+      		  	    counter++;
+      		  	    index.add(c+1);
+      		  	  }
+      		    }
+      		    if (counter==n){
+      		      for (int a=0; a<n; a++){
+      		    	values[a]=index.get(a);
+      		      }
+      		      nums.add(values);
+      		    }
+      		  }
+      	      for (int a=0; a<nums.size()-1; a++){
+      	    	for (int b=a+1; b<nums.size(); b++){
+      	    	  if (nums.get(a)==nums.get(b)){
+      	    		counter2++;
+      	    	  }
+      	    	}
+      	    	if (counter2==n){
+      	    	  int[] hope=nums.get(a);
+      	    	  for (int x=0; x<hope.length; x++){
+      	    	    for (int y=0; y<9; y++){
+      	    	      for (int z=0; z<9; z++){
+      	    	        set[y][z][hope[x]]=0;
+      	    	      }
+      	    	    }
+      	    	  }
+      	    	}
+      	    	counter2=0;
+      	      }
           
           counter=0;
-		}
+          }
+	    }
 	  }
 	}
   }
 }
+	
+  
+
