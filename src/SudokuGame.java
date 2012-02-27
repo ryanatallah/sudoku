@@ -104,9 +104,6 @@ public class SudokuGame {
     int changes = updateBoard();
     step++;
 
-    if (checkFailure(board) > 0 && branchCounter > 0)
-      revertBranch();
-
     if (changes > 0) {
       printBoard(board, "Step " + step, changes);
 
@@ -114,81 +111,10 @@ public class SudokuGame {
         printBoard(board, "PUZZLE SOLVED", 0);
       else
         solvePuzzle();
-    } 
-    
-    else {
-      if (createBranch()) {
-        printBoard(board, "No solutions; branch " + branchCounter + " created", 0);
-        set = makePossArr();
-        solvePuzzle();
-      } 
-      else {
-        if (branchCounter > 0) {
-          revertBranch();
-          makePossArr();
-          solvePuzzle();
-        } 
-        else {
-          if (print)
-            System.out.println("\nERROR: Puzzle could not be solved.\n");
-        }
-      }
+    } else {
+      if (print)
+        System.out.println("\nERROR: Puzzle could not be solved.\n");
     }
-  }
-
-
-  public boolean createBranch() {
-
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++) {
-        if (numPossValues(i,j) == 2) {
-          branchCounter++;
-
-          for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-              branches[branchCounter - 1][x][y] = board[x][y];
-            }
-          }
-
-          if (print)
-            System.out.printf("\n\nBRANCH CREATED AT [%d][%d]\n", i, j);
-          splitBranches(branchCounter, i, j);
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
-
-  public void splitBranches(int branchCounter, int i, int j) {
-    boolean numPicked = false;
-
-    for (int g = 0; g < 9; g++) {
-      int val = g + 1;
-      if (set[i][j][g] != 0 && set[i][j][g] != board[i][j]) {
-        if (numPicked != true) {
-          if (print)
-            System.out.println("Possible option 1: " + val);
-          board[i][j] = val;
-          numPicked = true;
-        } 
-        else {
-          if (print)
-            System.out.println("Possible option 2: " + val);
-          branches[branchCounter - 1][i][j] = val;
-        }
-      }
-    }
-  }
-
-
-  public void revertBranch() {
-    board = branches[branchCounter - 1];
-    resetPossValues();
-    printBoard(board, "Board reverted to branch " + branchCounter, 0);
-    branchCounter--;
   }
 
 
