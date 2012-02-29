@@ -9,6 +9,10 @@ public class CompleteBoard extends SudokuGame {
 	  super(temp, print);
   }
   
+  /**
+   * Inserts random numbers into the board at every space
+   * @return board, the completed board
+   */
   public int[][] makeBoard(){
     for (int i=0; i<9; i++){
       for (int j=0; j<9; j++){
@@ -19,6 +23,14 @@ public class CompleteBoard extends SudokuGame {
     return board;
   }
   
+  /**
+   * Given a blank space, inserts a random number that exists in the set
+   * of possible values for that space
+   * Checks to see if the board is still solvable
+   * If not, resets the board to its prior state and inserts a different number
+   * @param i the x-value of the space
+   * @param j the y-value of the space
+   */
   public void insertNum(int i, int j){
 	int[][] tempBoard=board;
 	int[][][] tempSet=set;
@@ -40,56 +52,38 @@ public class CompleteBoard extends SudokuGame {
   	  printBoard(board, "Not fixed", 0);
   	  set=tempSet;
   	  board=tempBoard;
+  	  for (int a=0; a<9; a++){
+  		board[i][a]=0;
+  	  }
+  	  resetPossValues();
+  	  for (int b=0; b<=j; b++){
+  		insertNum(i, b);
+  	  }
   	  printBoard(board, "Fixed", 0);
-  	  set[i][j][num]=0;
   	}
   }
   
+  /**
+   * Checks to see if the board is solvable
+   * If there are spaces with no possible values, the board
+   * cannot be solved
+   * @param test the board to be checked
+   * @return if the board is solvable
+   */
   public boolean isSolvable(int[][][] test){
 	int counter=0;
-	int index1=0;
-	int index2=0;
-	ArrayList<Integer> list1=new ArrayList<Integer>();
-	int[][] list2=new int[9][2];
 	for (int a=0; a<9; a++){
 	  for (int b=0; b<9; b++){
 		for (int c=0; c<9; c++){
 	      if (test[a][b][c] != 0){
 		    counter++;
-		    if (counter==1)
-		      index1=c;
-		    else if (counter==2)
-		      index2=c;
-		  }
+	      }
 		}
 	    if (counter==0){
 	  	  return false;
 	    }
-	    else if (counter==1){
-	      list1.add(test[a][b][index1]);
-	    }
-	    else if (counter==2){
-	      list2[b][0]=index1;
-	      list2[b][1]=index2;
-	    }
 	    counter=0;
 	  }
-	  for (int d=0; d<list1.size(); d++){
-		for (int e=0; e<list1.size(); e++){
-		  if (list1.get(e)==list1.get(d) && e != d){
-			return false;
-	      }
-		}
-	  }
-	  for (int g=0; g<9; g++){
-		for (int h=0; h<9; h++){
-		  for (int l=0; l<9; l++){
-			if (list2[g]==list2[h] && list2[g]==list2[l] && g != h && g != l)
-			  return false;
-		  }
-		}
-	  }
-	  list1.clear();
 	}
 	return true;
   }
