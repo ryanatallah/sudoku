@@ -17,16 +17,20 @@ public class Board extends JPanel{
 	  buttons[a-1] = new JButton(temp);
 	}
   }
+
   public void paintComponent(Graphics g){
 	super.paintComponent(g);
 	g.setColor(Color.BLACK);
+  g.drawLine(9, 29, 280, 29);
 	for (int i=0; i<=9; i++){
-	  g.drawLine(10, i*boxSize+30, 280, i*boxSize+30);
+	  g.drawLine(10, i*30+30, 280, i*30+30);
 	}
+	g.drawLine(9, 30, 9, 300);
 	for (int j=0; j<=9; j++){
 	  g.drawLine(j*30+10, 30, j*30+10, 300);
 	}
   }
+
   public static void main(String[] args){
 	JFrame w = new JFrame("Sudoku");
 	w.setBounds(300, 300, 300, 380);
