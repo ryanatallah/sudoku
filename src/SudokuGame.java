@@ -97,7 +97,7 @@ public class SudokuGame {
     step++;
 
     if (changes > 0) {
-      printBoard(board, "Step " + step, changes);
+      //printBoard(board, "Step " + step, changes);
 
       if (isSolved())
         printBoard(board, "PUZZLE SOLVED", 0);

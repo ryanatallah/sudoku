@@ -18,7 +18,7 @@ public class CompleteBoard extends SudokuGame {
       for (int j=0; j<9; j++){
     	insertNum(i,j);
       }
-      printBoard(board, "TestBoard "+ i, 0);
+      //printBoard(board, "TestBoard "+ i, 0);
     }
     return board;
   }
@@ -49,7 +49,7 @@ public class CompleteBoard extends SudokuGame {
   	makePossArr();
   	
   	if (isSolvable(set)==false){
-  	  printBoard(board, "Not fixed", 0);
+  	  //printBoard(board, "Not fixed", 0);
   	  set=tempSet;
   	  board=tempBoard;
   	  for (int a=0; a<9; a++){
@@ -59,7 +59,7 @@ public class CompleteBoard extends SudokuGame {
   	  for (int b=0; b<=j; b++){
   		insertNum(i, b);
   	  }
-  	  printBoard(board, "Fixed", 0);
+  	  //printBoard(board, "Fixed", 0);
   	}
   }
   
