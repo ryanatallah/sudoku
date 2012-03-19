@@ -72,4 +72,12 @@ public class IncompleteBoard extends CompleteBoard{
 	}
 	return puzzle;
   }
+  
+  /**
+   * Gets the solved board
+   * @return solution, the completed board
+   */
+  public int[][] getSolved(){
+	return solution;
+  }
 }
