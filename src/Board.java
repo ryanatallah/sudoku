@@ -128,7 +128,7 @@ public class Board extends JPanel implements ActionListener, MouseListener {
     String str = text.getText();
     if (str != "" && i>=0 && j>=0 && unsolved[i][j] == 0){
       board[i][j] = Integer.parseInt(str);
-      repaint();
+      repaint(0, 75, 40, 450, 450);
     }
     System.out.println("X = " + i +", Y = " + j + ", text = " + str);
   }
@@ -160,7 +160,7 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 	    mark = true;
 	  else
 		mark = false;
-	  repaint();
+    repaint(0, 75, 40, 450, 450);
 	}
   }
   
