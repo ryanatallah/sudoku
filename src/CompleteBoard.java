@@ -1,5 +1,5 @@
 import java.util.*;
-public class CompleteBoard extends SudokuGame {
+public abstract class CompleteBoard extends SudokuGame {
   static int[][] temp=new int[9][9];
   Random generator=new Random();
   static boolean print=true;
@@ -87,4 +87,6 @@ public class CompleteBoard extends SudokuGame {
 	}
 	return true;
   }
+  
+  public abstract int[][] makePuzzle();
 }

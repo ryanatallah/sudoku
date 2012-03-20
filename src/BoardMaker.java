@@ -6,7 +6,7 @@ public class BoardMaker {
 	int[][] fire=hope.makeBoard();
 	hope.printBoard(fire, "AWESOME", 0);
 	*/
-	IncompleteBoard test = new IncompleteBoard();
+	TenBoard test = new TenBoard();
 	int[][] wind = test.makePuzzle();
 	test.printBoard(wind, "Air", 0);
   }

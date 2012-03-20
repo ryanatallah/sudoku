@@ -1,5 +1,5 @@
 import java.util.*;
-public class SudokuGame {
+public class SudokuGame implements Sudoku {
 
   int[][][] set = new int[9][9][9];
   int[][][] branches = new int[74][9][9];
