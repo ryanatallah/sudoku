@@ -12,6 +12,8 @@ public class Board extends JPanel implements ActionListener, MouseListener {
   int[][] unsolved = new int[9][9];
   int[][] solved = flame.getSolved();
   boolean mark = false;
+  boolean welcomeScreen = true;
+  static JFrame frame = new JFrame("Sudoku");
 	
   public Board(){
     setBackground(Color.WHITE);
@@ -29,7 +31,9 @@ public class Board extends JPanel implements ActionListener, MouseListener {
   public void addComponentsToPane(Container c){
 	c.setLayout(null);
 	c.setBackground(Color.WHITE);
-
+	c.addMouseListener(this);
+	
+	if (!welcomeScreen){
 	nums = new JButton[9];
 	for (int a = 1; a<10; a++){
 	  nums[a-1] = new JButton("" + a);
@@ -38,8 +42,6 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 	  nums[a-1].addActionListener(this);
 	  c.add(nums[a-1]);
 	}
-
-	c.addMouseListener(this);
 	
 	JCheckBox help = new JCheckBox();
 	help.addActionListener(this);
@@ -47,6 +49,7 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 	help.setBounds(10, 10, 50, 30);
 	help.setText("Help");
 	c.add(help);
+	}
   }
   
   /**
@@ -61,6 +64,21 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 	padx = (width - boxSize*9)/2;
 	pady = 40;
 	
+	if (welcomeScreen){
+	  g.setColor(Color.WHITE);
+	  g.setFont(new Font("Welcome", Font.BOLD + Font.ITALIC, 40));
+	  Image dragon = (new ImageIcon("fire-dragon.jpg")).getImage();
+	  g.drawImage(dragon, 0, 0, null);
+	  g.drawString("WELCOME", 200, 40);
+	  g.drawString("TO THE JUNGLE", 140, 90);
+	  g.fillRoundRect(240, 500, 120, 50, 10, 10);
+	  g.setColor(Color.BLACK);
+	  g.setFont(new Font("Start", Font.BOLD, 20));
+	  g.drawString("Start Game", 247, 530);
+	}
+
+	
+	else{
 	super.paintComponent(g);
 	g.setColor(Color.BLACK);
 	g.setFont(new Font("Title", Font.BOLD, 30));
@@ -111,6 +129,7 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 		}
 	  }
 	}
+	}
 
   }
   
@@ -130,7 +149,12 @@ public class Board extends JPanel implements ActionListener, MouseListener {
       board[i][j] = Integer.parseInt(str);
       repaint(0, 75, 40, 450, 450);
     }
-    System.out.println("X = " + i +", Y = " + j + ", text = " + str);
+    if (welcomeScreen && x>240 && x<360 && y>500 && y<550){
+      welcomeScreen=false;
+      repaint();
+      Container c = frame.getLayeredPane();
+      addComponentsToPane(c);
+    }
   }
 
   public void mouseEntered(MouseEvent e) {	
@@ -151,22 +175,23 @@ public class Board extends JPanel implements ActionListener, MouseListener {
    * If the check box is checked or unchecked, sets boolean mark and repaints
    */
   public void actionPerformed(ActionEvent e){
-	if (e.getActionCommand() != "help"){
-	  String str = e.getActionCommand();
-	  text.setText(str);
-	}
-	else{
+	if (e.getActionCommand() == "help"){
 	  if (! mark)
-	    mark = true;
+		mark = true;
 	  else
 		mark = false;
-    repaint(0, 75, 40, 450, 450);
+	  repaint(0, 25, 40, 450, 450);
+	}
+	else{
+	  String str = e.getActionCommand();
+	  text.setText(str);
+	  repaint(0, 25, 40, 450, 450);
 	}
   }
   
   public static void main(String[] args){
 	//Create and set up the window.
-      JFrame frame = new JFrame("Sudoku");
+      //JFrame frame = new JFrame("Sudoku");
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(600, 600);
       frame.setResizable(false);
