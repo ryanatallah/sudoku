@@ -14,6 +14,7 @@ public class Board extends JPanel implements ActionListener, MouseListener {
   boolean mark = false;
   boolean welcomeScreen = true;
   static JFrame frame = new JFrame("Sudoku");
+  JPanel p;
 	
   public Board(){
     setBackground(Color.WHITE);
@@ -37,18 +38,25 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 	nums = new JButton[9];
 	for (int a = 1; a<10; a++){
 	  nums[a-1] = new JButton("" + a);
-	  nums[a-1].setBounds((a-1)*60+25, 500, 60, 60);
+	  nums[a-1].setBounds((a)*54+26, 500, 54, 60);
 	  nums[a-1].setActionCommand("" + a);
 	  nums[a-1].addActionListener(this);
 	  c.add(nums[a-1]);
 	}
+	JButton delete = new JButton("X");
+	delete.setBounds(26, 500, 54, 60);
+	delete.setActionCommand("X");
+	delete.addActionListener(this);
+	c.add(delete);
 	
 	JCheckBox help = new JCheckBox();
 	help.addActionListener(this);
 	help.setActionCommand("help");
-	help.setBounds(10, 10, 50, 30);
+	help.setBounds(10, 10, 90, 30);
+	help.setOpaque(false);
 	help.setText("Help");
-	c.add(help);
+	help.setForeground(Color.WHITE);
+	add(help);
 	}
   }
   
@@ -80,20 +88,34 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 	
 	else{
 	super.paintComponent(g);
-	g.setColor(Color.BLACK);
+	/**
+	p = new JPanel();
+	p.setVisible(true);
+	frame.add(p);
+	frame.setVisible(true);
+	g = p.getGraphics();
+	*/
+	
+	Image flowers = (new ImageIcon("fire-flowers.gif")).getImage();
+	g.drawImage(flowers, 0, 0, null);
+	g.setColor(Color.WHITE);
 	g.setFont(new Font("Title", Font.BOLD, 30));
 	g.drawString("Sudoku Board", 200, 30);
 	
 	for (int i=0; i<=9; i++){
 	  g.drawLine(padx, i*boxSize + pady, padx + boxSize*9, i*boxSize + pady);
-	  if (i%3 == 0)  
+	  if (i%3 == 0){  
 		g.drawLine(padx, i*boxSize + pady + 1, padx + boxSize*9, i*boxSize + pady + 1);
+		g.drawLine(padx, i*boxSize + pady - 1, padx + boxSize*9, i*boxSize + pady - 1);
+	  }
 	}
 
 	for (int j=0; j<=9; j++){
 	  g.drawLine(j*boxSize + padx, pady, j*boxSize + padx, pady + boxSize*9);
-	  if (j%3 == 0)
+	  if (j%3 == 0){
 		g.drawLine(j*boxSize + padx + 1, pady, j*boxSize + padx + 1, pady + boxSize*9);
+		g.drawLine(j*boxSize + padx - 1, pady, j*boxSize + padx - 1, pady + boxSize*9);
+	  }
 	}
 	
 	g.setFont(new Font("Numbers", Font.PLAIN, 30));
@@ -105,11 +127,11 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 		yPos = j*boxSize + pady + boxSize/2 + 10;
 		if (board[i][j] != 0){
 		  if (board[i][j] != unsolved[i][j]){
-		    g.setColor(Color.BLUE);
+		    g.setColor(new Color(130, 215, 251));
 		    g.drawString("" + board[i][j], xPos, yPos);
 		  }
 		  else{
-		    g.setColor(Color.BLACK);
+		    g.setColor(Color.WHITE);
 		    g.drawString("" + board[i][j], xPos, yPos);
 		  }
 		  if (mark){
@@ -122,7 +144,7 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 			  g.drawString("" + board[i][j], xPos, yPos);
 			}
 			else{
-			  g.setColor(Color.BLACK);
+			  g.setColor(Color.WHITE);
 			  g.drawString("" + board[i][j], xPos, yPos);
 			}
 		  }
@@ -145,7 +167,7 @@ public class Board extends JPanel implements ActionListener, MouseListener {
     int i = (x - padx)/boxSize;
     int j = (y-pady)/boxSize;
     String str = text.getText();
-    if (str != "" && i>=0 && j>=0 && unsolved[i][j] == 0){
+    if (str != "" && i>=0 && i<9 && j>=0 && j<9 && unsolved[i][j] == 0){
       board[i][j] = Integer.parseInt(str);
       repaint(0, 75, 40, 450, 450);
     }
@@ -182,20 +204,24 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 		mark = false;
 	  repaint(0, 25, 40, 450, 450);
 	}
+	else if (e.getActionCommand() == "X"){
+	  text.setText("0");
+	  //repaint(0, 25, 40, 450, 450);
+	}
 	else{
 	  String str = e.getActionCommand();
 	  text.setText(str);
-	  repaint(0, 25, 40, 450, 450);
+	  //repaint(0, 25, 40, 450, 450);
 	}
   }
   
   public static void main(String[] args){
 	//Create and set up the window.
-      //JFrame frame = new JFrame("Sudoku");
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(600, 600);
       frame.setResizable(false);
       frame.setBackground(Color.WHITE);
+      //frame.setVisible(true);
       
       Container c = frame.getLayeredPane();
       
@@ -203,8 +229,7 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 
       frame.add(board);
       board.addComponentsToPane(c);
-
-      //Display the window.
+      
       frame.setVisible(true);
   }
 }
